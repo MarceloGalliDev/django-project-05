@@ -27,6 +27,18 @@ class ProdutosModels(models.Model):
         verbose_name="Tipo"
     )
     
+    def resize_img(img, new_width=800):
+        print(img.name)
+    
+    # subscrevendo metodo save()
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        max_size_img = 800
+        
+        if self.imagem:
+            self.resize_img(self.imagem, max_size_img)
+    
     def __str__(self):
         return self.nome
     
