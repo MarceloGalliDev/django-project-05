@@ -1,6 +1,9 @@
 
 """models for products"""
 from django.db import models
+from PIL import Image
+import os
+from django.conf import settings
 
 
 class ProdutosModels(models.Model):
@@ -26,9 +29,15 @@ class ProdutosModels(models.Model):
         ),
         verbose_name="Tipo"
     )
-    
+
+    @staticmethod
     def resize_img(img, new_width=800):
-        print(img.name)
+        image_full_path = os.path.join(settings.MEDIA_ROOT, img.name)
+        img_pil = Image.open(image_full_path)
+        original_width, original_height = img_pil.size
+        
+        # regra de três para pegar a largura da imagem redimensionada
+        new_height = (new_width * original_height) / original_width
     
     # subscrevendo metodo save()
     def save(self, *args, **kwargs):
