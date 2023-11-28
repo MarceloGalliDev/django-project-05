@@ -69,6 +69,25 @@ class ProdutosModels(models.Model):
             models.Index(fields=["codigo"], name="codigo_produto_idx"),
         ]
 
+
+class VariacaoProdutosModel(models.Model):
+    codigo = models.IntegerField(primary_key=True, verbose_name='Código variação')
+    produto = models.ForeignKey(ProdutosModels, on_delete=models.CASCADE, verbose_name='Produto variação')
+    nome = models.CharField(max_length=50, blank=True, null=True, verbose_name='Nome variação')
+    preco = models.FloatField(verbose_name='Preço variação')
+    preco_promocional = models.FloatField(default=0, verbose_name='Preço promocional variação')
+    estoque = models.PositiveIntegerField(default=1, verbose_name='Estoque')
+    
+    def __str__(self):
+        return self.nome or self.produto.nome
+    
+    class Meta:
+        verbose_name = "Produto variação"
+        verbose_name_plural = "Produtos variações"
+        indexes = [
+            models.Index(fields=["codigo"], name="codigo_produto_variacao_idx"),
+        ]
+
 """
 Produto:
     Produto:
