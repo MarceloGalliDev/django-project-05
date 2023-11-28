@@ -35,9 +35,20 @@ class ProdutosModels(models.Model):
         image_full_path = os.path.join(settings.MEDIA_ROOT, img.name)
         img_pil = Image.open(image_full_path)
         original_width, original_height = img_pil.size
-        
+
+        if original_width <= new_width:
+            img_pil.close()
+            return
+
         # regra de três para pegar a largura da imagem redimensionada
-        new_height = (new_width * original_height) / original_width
+        new_height = round((new_width * original_height) / original_width)
+        
+        new_img = img_pil.resize((new_width, new_height), Image.LANCZOS)
+        new_img.save(
+            image_full_path,
+            optimize=True,
+            quality=50,
+        )
     
     # subscrevendo metodo save()
     def save(self, *args, **kwargs):
