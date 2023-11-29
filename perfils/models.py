@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class PerfilModels(models.Model):
@@ -32,7 +33,28 @@ class PerfilModels(models.Model):
         ('TO', 'Tocantins'),        
     ]
 
-    usuario = models.OneToOneField()
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Usuario')
+    idade = models.IntegerField(verbose_name='Idade')
+    data_nascimento = models.DateField(verbose_name='Data de nascimento')
+    cpf = models.CharField(max_length=11, verbose_name='CPF')
+    endereco = models.CharField(max_length=50, verbose_name='Endereço')
+    numero = models.CharField(max_length=50, verbose_name='Número')
+    complemento = models.CharField(max_length=30, verbose_name='Complemento')
+    bairro = models.CharField(max_length=30, verbose_name='Bairro')
+    cep = models.CharField(max_length=8, verbose_name='Cep')
+    cidade = models.CharField(max_length=30, verbose_name='Cidade')
+    estado = models.CharField(max_length=30, default='PR', choices=ESTADOS_CHOICES, verbose_name='Estado')
+    
+    def __str__(self):
+        return f'{self.usuario.first_name} {self.usuario.last_name}'
+
+    class Meta:
+        verbose_name = "Perfil"
+        verbose_name_plural = "Perfils"
+        indexes = [
+            models.Index(fields=["usuario"], name="usuario_perfil_idx"),
+        ]
+    
 """
 PerfilUsuario
     user - FK user (ou OneToOne)

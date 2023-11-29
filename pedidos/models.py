@@ -17,7 +17,7 @@ class PedidosModels(models.Model):
     status = models.CharField(default='C', max_length=1, choices=STATUS, verbose_name='Status')
 
     def __str__(self):
-            return (f'Pedido nº: {self.pk}')
+        return (f'Pedido nº: {self.pk}')
     
     class Meta:
         verbose_name = "Pedido"
