@@ -1,5 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+# import exceções
+from django.forms import ValidationError
+# expressão regular
+import re
+from utils.validacpf import valida_cpf
 
 
 class PerfilModels(models.Model):
@@ -45,12 +50,27 @@ class PerfilModels(models.Model):
     cidade = models.CharField(max_length=30, verbose_name='Cidade')
     estado = models.CharField(max_length=30, default='PR', choices=ESTADOS_CHOICES, verbose_name='Estado')
     
+    
     def __str__(self):
-        return f'{self.usuario.first_name} {self.usuario.last_name}'
+        return f'{self.usuario}'
+    
+    
+    # função para validar dados
+    def clean(self):
+        error_message = {}
+        
+        if not valida_cpf(self.cpf):
+            error_message['cpf'] = 'Digite um CPF válido!'
+        
+        if re.search(r'[ˆ0,9]', self.cep) or len(self.cep) < 8:
+            error_message['cep'] = 'Digite um CEP válido, somente números!'
+        
+        if error_message:
+            raise ValueError(error_message)
 
     class Meta:
         verbose_name = "Perfil"
-        verbose_name_plural = "Perfils"
+        verbose_name_plural = "Perfis"
         indexes = [
             models.Index(fields=["usuario"], name="usuario_perfil_idx"),
         ]

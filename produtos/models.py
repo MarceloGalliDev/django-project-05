@@ -4,15 +4,17 @@ from django.db import models
 from PIL import Image
 import os
 from django.conf import settings
+# biblioteca para gerar slug unique
+from django.utils.text import slugify
 
 
 class ProdutosModels(models.Model):
     codigo = models.IntegerField(primary_key=True, verbose_name="Código")
     nome = models.CharField(max_length=255, blank=False, null=False, verbose_name="Nome")
     descricao_curta = models.TextField(max_length=255, blank=False, null=False, verbose_name="Descrição curta")
-    descricao_longa = models.TextField(max_length=255, blank=False, null=False, verbose_name="Descrição longa")
+    descricao_longa = models.TextField(max_length=2000, blank=False, null=False, verbose_name="Descrição longa")
     imagem = models.ImageField(upload_to="produto_imagem/%Y/%m/", blank=True, null=True, verbose_name="Imagem")
-    slug = models.SlugField(unique=True, verbose_name="Slug")
+    slug = models.SlugField(unique=True, blank=True, null=True, verbose_name="Slug")
     preco_marketing = models.FloatField(verbose_name="Preço marketing")
     preco_marketing_promocional = models.FloatField(verbose_name="Preço marketing promocional")
     tipo = models.CharField(
@@ -29,6 +31,7 @@ class ProdutosModels(models.Model):
         ),
         verbose_name="Tipo"
     )
+
 
     @staticmethod
     def resize_img(img, new_width=800):
@@ -49,9 +52,27 @@ class ProdutosModels(models.Model):
             optimize=True,
             quality=50,
         )
-    
+
+
+    def preco_formatado(self):
+        return f'R$ {self.preco_marketing:.2f}'.replace(".", ",")
+    preco_formatado.short_description = 'Preço'
+
+
+    def preco_formatado_promo(self):
+        return f'R$ {self.preco_marketing_promocional:.2f}'.replace(".", ",")
+    preco_formatado_promo.short_description = 'Preço Promo'
+
+
     # subscrevendo metodo save()
     def save(self, *args, **kwargs):
+              
+        # criando slug com o nome e caracteres randomized
+        if not self.slug:
+            slug = f'{slugify(self.nome)}-{self.codigo}'
+            # 
+            self.slug = slug
+        
         super().save(*args, **kwargs)
         
         max_size_img = 800
