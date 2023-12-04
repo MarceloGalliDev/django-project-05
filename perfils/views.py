@@ -7,13 +7,13 @@ class CriarPerfil(View):
     pass
 
 
-class CriarPerfil(View):
+class AtualizarPerfil(View):
     pass
 
 
-class CriarPerfil(View):
+class LoginPerfil(View):
     pass
 
 
-class CriarPerfil(View):
+class LogoutPerfil(View):
     pass
