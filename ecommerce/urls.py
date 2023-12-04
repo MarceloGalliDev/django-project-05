@@ -6,9 +6,9 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('produtos/', include('produtos.urls')),
-    # path('pedidos/', include('pedidos.urls')),
-    # path('perfils/', include('perfils.urls')),
+    path('', include('produtos.urls')),
+    path('perfils/', include('perfils.urls')),
+    path('pedidos/', include('pedidos.urls')),
     
     # TODO somente desenvolvimento, apagar no deploy
     path('__debug__/', include('debug_toolbar.urls')),
